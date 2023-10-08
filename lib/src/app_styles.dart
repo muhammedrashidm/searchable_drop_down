@@ -26,7 +26,7 @@ class AppStyles {
   );
 
   static const appBarStyle = TextStyle(
-    color: AppColors.primary,
+    color: Colors.black,
     fontFamily: 'Inter',
     fontSize: 12,
     fontWeight: FontWeight.w700,
@@ -60,7 +60,7 @@ class AppStyles {
     borderRadius: BorderRadius.circular(5),
     boxShadow: [
       BoxShadow(
-        color: AppColors.grayWhite.withOpacity(0.7),
+        color: Colors.grey.withOpacity(0.7),
         offset: const Offset(0, 1),
         spreadRadius: 0.5,
         blurRadius: 2.5,
@@ -71,25 +71,26 @@ class AppStyles {
   );
 
   static const newTextStyleCard = TextStyle(
-      fontSize: 12,
-      fontWeight: FontWeight.w600,
-      color: AppColors.tabPrimary,
-      shadows: [
-        Shadow(
-            // bottomLeft
-            offset: Offset(-2.5, -2.5),
-            color: Colors.white),
-        Shadow(
-            // bottomRight
-            offset: Offset(2.5, -2.5),
-            color: Colors.white),
-        Shadow(
-            // topRight
-            offset: Offset(2.5, 2.5),
-            color: Colors.white),
-        Shadow(
-            // topLeft
-            offset: Offset(-2.5, 2.5),
-            color: Colors.white),
-      ]);
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
+    color: Colors.blueAccent,
+    shadows: [
+      Shadow(
+          // bottomLeft
+          offset: Offset(-2.5, -2.5),
+          color: Colors.white),
+      Shadow(
+          // bottomRight
+          offset: Offset(2.5, -2.5),
+          color: Colors.white),
+      Shadow(
+          // topRight
+          offset: Offset(2.5, 2.5),
+          color: Colors.white),
+      Shadow(
+          // topLeft
+          offset: Offset(-2.5, 2.5),
+          color: Colors.white),
+    ],
+  );
 }

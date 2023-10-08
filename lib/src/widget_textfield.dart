@@ -44,6 +44,7 @@ class TextFieldWidget extends StatefulWidget {
 
   final void Function(String)? doOnChanged;
   final bool isSuffix;
+  final Color? cursorColor;
 
   const TextFieldWidget({
     super.key,
@@ -85,6 +86,7 @@ class TextFieldWidget extends StatefulWidget {
     this.suffixIconConstraints,
     this.disabledColor,
     this.isSuffix = false,
+    this.cursorColor,
   });
 
   @override
@@ -110,7 +112,7 @@ class TextFieldWidgetState extends State<TextFieldWidget> {
       child: TextFormField(
         maxLines: widget.maxlines,
         maxLength: widget.maxLength,
-        cursorColor: Colors.grey.shade800,
+        cursorColor: widget.cursorColor ?? Colors.grey.shade800,
         obscureText: _passwordVisible,
         keyboardType: widget.textInputType,
         inputFormatters: widget.textInputType == TextInputType.number
@@ -135,50 +137,63 @@ class TextFieldWidgetState extends State<TextFieldWidget> {
           suffixIconConstraints: widget.suffixIconConstraints,
           suffixIcon: widget.obscureText && widget.isSuffix
               ? Focus(
-            descendantsAreFocusable: false,
-            skipTraversal: true,
-            child: IconButton(
-              icon: Icon(
-                _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                color: Colors.grey.shade400,
-              ),
-              onPressed: () {
-                setState(() {
-                  _passwordVisible = !_passwordVisible;
-                });
-              },
-            ),
-          )
+                  descendantsAreFocusable: false,
+                  skipTraversal: true,
+                  child: IconButton(
+                    icon: Icon(
+                      _passwordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Colors.grey.shade400,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _passwordVisible = !_passwordVisible;
+                      });
+                    },
+                  ),
+                )
               : widget.suffixIcon,
           hintText: widget.labelText ?? widget.hintText,
           fillColor: widget.isReadOnly != null && widget.isReadOnly!
-              ? widget.disabledColor ?? AppColors.primaryDisabled
-              : widget.bgColor ?? AppColors.primaryLight,
+              ? widget.disabledColor ?? Colors.grey.shade700
+              : widget.bgColor ?? Colors.grey.shade100,
           //........
           filled: true,
           enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                  color: widget.isReadOnly != null && widget.isReadOnly!
-                      ? widget.disabledColor ?? AppColors.primaryDisabled
-                      : widget.outlineColor ?? AppColors.primaryLight),
+                color: widget.isReadOnly != null && widget.isReadOnly!
+                    ? widget.disabledColor ?? Colors.grey.shade700
+                    : widget.outlineColor ?? Colors.grey.shade100,
+              ),
               //....... change primary light temp to primary light for blue text field
-              borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 2))),
+              borderRadius:
+                  BorderRadius.all(Radius.circular(widget.borderRadius ?? 2))),
           focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: widget.isReadOnly != null && widget.isReadOnly!
-                      ? widget.disabledColor ?? AppColors.primaryDisabled
-                      : widget.outlineColor ?? AppColors.primaryLight),
-              //..........
-              borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 2))),
+            borderSide: BorderSide(
+              color: widget.isReadOnly != null && widget.isReadOnly!
+                  ? widget.disabledColor ?? Colors.grey.shade700
+                  : widget.outlineColor ?? Colors.grey.shade100,
+            ),
+            //..........
+            borderRadius: BorderRadius.all(
+              Radius.circular(
+                widget.borderRadius ?? 2,
+              ),
+            ),
+          ),
           hintStyle: TextStyle(
-            color: widget.hintColor ?? AppColors.subTextBlack,
+            color: widget.hintColor ?? Colors.black,
             fontSize: 11,
             fontWeight: FontWeight.w300,
             fontStyle: FontStyle.normal,
             letterSpacing: 1,
           ),
-          contentPadding:
-          widget.padding ?? EdgeInsets.symmetric(vertical: widget.height ?? 10, horizontal: 8),
+          contentPadding: widget.padding ??
+              EdgeInsets.symmetric(
+                vertical: widget.height ?? 10,
+                horizontal: 8,
+              ),
           isDense: true,
           errorStyle: const TextStyle(
             color: Colors.redAccent,
@@ -189,11 +204,23 @@ class TextFieldWidgetState extends State<TextFieldWidget> {
             letterSpacing: 1.2,
           ),
           errorBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.redAccent, width: 0.8),
-              borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 2.0))),
+            borderSide: const BorderSide(color: Colors.redAccent, width: 0.8),
+            borderRadius: BorderRadius.all(
+              Radius.circular(
+                widget.borderRadius ?? 2.0,
+              ),
+            ),
+          ),
           focusedErrorBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.redAccent),
-              borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 2.0))),
+            borderSide: const BorderSide(
+              color: Colors.redAccent,
+            ),
+            borderRadius: BorderRadius.all(
+              Radius.circular(
+                widget.borderRadius ?? 2.0,
+              ),
+            ),
+          ),
         ),
         textInputAction: widget.actionKeyboard,
         onChanged: widget.doOnChanged,
@@ -212,4 +239,3 @@ class TextFieldWidgetState extends State<TextFieldWidget> {
     );
   }
 }
-
