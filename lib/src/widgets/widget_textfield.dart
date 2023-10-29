@@ -126,6 +126,7 @@ class TextFieldWidgetState extends State<TextFieldWidget> {
           fontWeight: widget.fontWeight ?? FontWeight.w400,
           fontStyle: FontStyle.normal,
           letterSpacing: 1,
+          color: widget.textColor ?? Colors.black,
         ),
         initialValue: widget.defaultText,
         // inputFormatters: widget.inputFormatter,

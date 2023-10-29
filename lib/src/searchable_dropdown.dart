@@ -3,12 +3,11 @@ import 'dart:developer';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:searchable_drop_down/src/widget_textfield.dart';
+import 'package:searchable_drop_down/src/widgets/widget_textfield.dart';
 
-import '/src/app_styles.dart';
-
-class SearchableDropdownWidget extends StatefulWidget {
-  const SearchableDropdownWidget({
+class SearchableDropdown extends StatefulWidget {
+  /// Creates a Searchable DropDown where you can enter and search for a particular dropdown value
+  const SearchableDropdown({
     Key? key,
     required this.dropDownList,
     required this.onSelected,
@@ -21,6 +20,7 @@ class SearchableDropdownWidget extends StatefulWidget {
     this.bgColor,
     this.disabledColor,
     this.onFieldTap,
+    this.textColor,
   }) : super(key: key);
   final List<String> dropDownList;
   final ValueChanged<String?> onSelected;
@@ -33,13 +33,13 @@ class SearchableDropdownWidget extends StatefulWidget {
   final Color? outlineColor;
   final Color? disabledColor;
   final Color? bgColor;
+  final Color? textColor;
 
   @override
-  State<SearchableDropdownWidget> createState() =>
-      _SearchableDropdownWidgetState();
+  State<SearchableDropdown> createState() => _SearchableDropdownWidgetState();
 }
 
-class _SearchableDropdownWidgetState extends State<SearchableDropdownWidget>
+class _SearchableDropdownWidgetState extends State<SearchableDropdown>
     with AfterLayoutMixin {
   String _selectedOption = '', keyboardSelectedItem = '';
   var filteredOptions = [];
@@ -47,7 +47,9 @@ class _SearchableDropdownWidgetState extends State<SearchableDropdownWidget>
   int selectedIndex = -1;
   int optionsLength = 0;
   TextEditingController textFieldController = TextEditingController();
+  
 
+  /// This will handle the arrowkey action in PC
   _handleKeyEvent(RawKeyEvent keyEvent) {
     if (keyEvent is RawKeyDownEvent) {
       if (keyEvent.logicalKey == LogicalKeyboardKey.arrowUp) {
@@ -195,7 +197,7 @@ class _SearchableDropdownWidgetState extends State<SearchableDropdownWidget>
                               },
                               title: Text(
                                 option,
-                                style: AppStyles.alertNormal.copyWith(
+                                style: TextStyle(
                                   fontSize: 10,
                                   // color: Colors.black,
                                   color: index == selectedIndex
@@ -237,95 +239,89 @@ class _SearchableDropdownWidgetState extends State<SearchableDropdownWidget>
                 fieldTextEditingController.text = keyboardSelectedItem;
                 keyboardSelectedItem = '';
               }
-              // if the given default value is not null and the field is not read only.
-
-              return TapRegion(
-                onTapOutside: (event) {
-                  print('outside');
+              return TextFieldWidget(
+                textColor: widget.textColor,
+                bgColor: widget.bgColor,
+                outlineColor: widget.outlineColor,
+                disabledColor: widget.disabledColor,
+                isReadOnly: widget.isReadOnly ?? false,
+                focusNode: fieldFocusNode,
+                controller: fieldTextEditingController,
+                // widget.controller ?? fieldTextEditingController,
+                textCapitalization: TextCapitalization.words,
+                maxlines: 1,
+                functionValidate: widget.functionValidate,
+                hintText: widget.hint ?? '',
+                doOnChanged: (val) {
+                  widget.isReadOnly ?? false
+                      ? null //todo rest
+                      : textOnChanged(val);
                 },
-                child: TextFieldWidget(
-                  bgColor: widget.bgColor,
-                  outlineColor: widget.outlineColor,
-                  disabledColor: widget.disabledColor,
-                  isReadOnly: widget.isReadOnly ?? false,
-                  focusNode: fieldFocusNode,
-                  controller: fieldTextEditingController,
-                  // widget.controller ?? fieldTextEditingController,
-                  textCapitalization: TextCapitalization.words,
-                  maxlines: 1,
-                  functionValidate: widget.functionValidate,
-                  hintText: widget.hint ?? '',
-                  doOnChanged: (val) {
-                    widget.isReadOnly ?? false
-                        ? null //todo rest
-                        : textOnChanged(val);
-                  },
-                  // onSubmitField: () {
-                  //   widget.onSelected(fieldTextEditingController.text);
-                  // },
-                  onFieldTap: () {
-                    if (widget.onFieldTap != null) {
-                      widget.onFieldTap!();
-                    }
-                    debugPrint('abc_searchableDropDown onFieldTap');
-                    setState(() {
-                      // fieldTextEditingController.text = '';
-                      log('currentTexteditingValue => ${fieldTextEditingController.text}');
-                    });
-                  },
-                  suffixIconConstraints:
-                      const BoxConstraints(minWidth: 23, maxHeight: 20),
-                  suffixIcon: _selectedOption.isEmpty
-                      ? Focus(
-                          skipTraversal: true,
-                          descendantsAreFocusable: false,
-                          descendantsAreTraversable: false,
-                          canRequestFocus: false,
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 10),
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                customBorder: const CircleBorder(),
-                                onTap: () {
-                                  setState(() {});
-                                },
-                                child: const Icon(
-                                  Icons.keyboard_arrow_down_rounded,
-                                  size: 15,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-                      : Focus(
-                          skipTraversal: true,
-                          descendantsAreFocusable: false,
-                          descendantsAreTraversable: false,
-                          canRequestFocus: false,
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 10),
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                customBorder: const CircleBorder(),
-                                onTap: () {
-                                  widget.isReadOnly ?? false
-                                      ? null
-                                      : closeIconClick(
-                                          fieldTextEditingController);
-                                },
-                                child: const Icon(
-                                  Icons.close_rounded,
-                                  size: 12,
-                                  color: Colors.black,
-                                ),
+                // onSubmitField: () {
+                //   widget.onSelected(fieldTextEditingController.text);
+                // },
+                onFieldTap: () {
+                  if (widget.onFieldTap != null) {
+                    widget.onFieldTap!();
+                  }
+                  debugPrint('abc_searchableDropDown onFieldTap');
+                  setState(() {
+                    // fieldTextEditingController.text = '';
+                    log('currentTexteditingValue => ${fieldTextEditingController.text}');
+                  });
+                },
+                suffixIconConstraints:
+                    const BoxConstraints(minWidth: 23, maxHeight: 20),
+                suffixIcon: _selectedOption.isEmpty
+                    ? Focus(
+                        skipTraversal: true,
+                        descendantsAreFocusable: false,
+                        descendantsAreTraversable: false,
+                        canRequestFocus: false,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              customBorder: const CircleBorder(),
+                              onTap: () {
+                                setState(() {});
+                              },
+                              child: const Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                                size: 15,
+                                color: Colors.black,
                               ),
                             ),
                           ),
                         ),
-                ),
+                      )
+                    : Focus(
+                        skipTraversal: true,
+                        descendantsAreFocusable: false,
+                        descendantsAreTraversable: false,
+                        canRequestFocus: false,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              customBorder: const CircleBorder(),
+                              onTap: () {
+                                widget.isReadOnly ?? false
+                                    ? null
+                                    : closeIconClick(
+                                        fieldTextEditingController);
+                              },
+                              child: const Icon(
+                                Icons.close_rounded,
+                                size: 12,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
               );
             },
           ),
@@ -334,6 +330,7 @@ class _SearchableDropdownWidgetState extends State<SearchableDropdownWidget>
     );
   }
 
+  /// clears the textfield
   void clearField() {
     //log('abc_clear2');
     setState(() {
